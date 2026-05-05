@@ -1,4 +1,6 @@
-import { open } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { Readable } from "node:stream";
 
 import { NextResponse } from "next/server";
 
@@ -22,10 +24,13 @@ export async function GET(
   }
 
   try {
-    const file = await open(resolveStoragePath(document.storagePath), "r");
+    const filePath = resolveStoragePath(document.storagePath);
+    await stat(filePath);
     await markDocumentOpened(documentId);
 
-    return new Response(file.readableWebStream() as ReadableStream, {
+    const webStream = Readable.toWeb(createReadStream(filePath));
+
+    return new Response(webStream as ReadableStream, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${document.sourceFilename.replaceAll('"', "")}"`,
