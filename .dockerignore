@@ -1,0 +1,7 @@
+node_modules
+.next
+.git
+local-files
+data
+.env
+.env.local

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { PdfViewerClient } from "@/app/documents/[documentId]/pdf-viewer-client";
+import { PdfViewerWrapper } from "@/app/documents/[documentId]/pdf-viewer-wrapper";
 import { isAuthenticated } from "@/lib/auth";
 import { findDocument } from "@/lib/db";
 import { toPublicDocument } from "@/lib/documents";
@@ -44,7 +44,7 @@ export default async function DocumentPage({
         </div>
       </header>
 
-      <PdfViewerClient document={toPublicDocument(document)} />
+      <PdfViewerWrapper document={toPublicDocument(document)} />
     </main>
   );
 }
