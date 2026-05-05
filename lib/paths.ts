@@ -1,6 +1,6 @@
 import path from "node:path";
 
-export const DATA_DIR = path.join(process.cwd(), "data");
+export const DATA_DIR = path.join(process.cwd(), "local-files", "data");
 export const DB_PATH = path.join(DATA_DIR, "library.json");
 export const LOCAL_FILES_DIR = path.join(process.cwd(), "local-files");
 export const DOCUMENTS_DIR = path.join(LOCAL_FILES_DIR, "documents");
