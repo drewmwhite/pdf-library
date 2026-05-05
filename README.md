@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PDF Library
 
-## Getting Started
+A personal, self-hosted PDF library. Upload PDFs, read them in the browser, bookmark pages, and annotate with highlights and notes.
 
-First, run the development server:
+## Features
+
+- Upload and manage PDF documents
+- In-browser PDF viewer with text selection
+- Page bookmarks
+- Highlight annotations with color and notes
+- Password-protected single-user auth
+
+## Local Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env.local` file with the required environment variables:
+
+```bash
+PDF_LIBRARY_SESSION_SECRET=your-secret-here
+PDF_LIBRARY_PASSWORD=your-password-here
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Data is stored under `local-files/` in the project root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `local-files/data/library.json` — document database
+- `local-files/documents/` — uploaded PDF files
 
-## Learn More
+## Deployment (Fly.io)
 
-To learn more about Next.js, take a look at the following resources:
+Set secrets:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+fly secrets set PDF_LIBRARY_SESSION_SECRET=your-secret-here PDF_LIBRARY_PASSWORD=your-password-here
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create the persistent volume (one time only):
 
-## Deploy on Vercel
+```bash
+fly volume create pdf_library_data --region dfw --size 10
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+fly deploy
+```
+
+The volume is mounted at `/app/local-files` inside the container, so both the database and uploaded PDFs survive redeploys.
